@@ -19,7 +19,7 @@ void Link::execute(CPUState& cpu_state){
 
     pc = cpu_state.registers.get(REG_PC, SIZE_LONG);
     pc += SIZE_WORD;
-    displacement = cpu_state.memory.get(pc, this->data_size);
+    displacement = (int16_t)cpu_state.memory.get(pc, this->data_size);
     pc += SIZE_WORD;
     cpu_state.registers.set(REG_PC, SIZE_LONG, pc);
 
@@ -35,7 +35,7 @@ std::string Link::disassembly(CPUState& cpu_state){
     int16_t displacement;
     uint32_t pc = cpu_state.registers.get(REG_PC, SIZE_LONG);
     pc += SIZE_WORD;
-    displacement = cpu_state.memory.get(pc, this->data_size);
+    displacement = (int16_t)cpu_state.memory.get(pc, this->data_size);
     pc += SIZE_WORD;
     cpu_state.registers.set(REG_PC, SIZE_LONG, pc);
 
@@ -45,6 +45,6 @@ std::string Link::disassembly(CPUState& cpu_state){
     return output.str();
 }
 
-std::shared_ptr<INSTRUCTION::Instruction> Link::create(uint16_t opcode){
-    return std::make_shared<Link>(opcode);
+std::unique_ptr<INSTRUCTION::Instruction> Link::create(uint16_t opcode){
+    return std::make_unique<Link>(opcode);
 }

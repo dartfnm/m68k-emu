@@ -45,7 +45,6 @@ namespace M68K{
         static const size_t REG_BUFFER_SIZE = 18;
 
         Registers() = default;
-        Registers(Registers&) = default;
 
         uint32_t get(RegisterType reg, DataSize size = DataSize::SIZE_LONG);
         void set(RegisterType reg, DataSize size, uint32_t data);

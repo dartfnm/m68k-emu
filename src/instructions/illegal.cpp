@@ -19,6 +19,6 @@ std::string Illegal::disassembly(CPUState& cpu_state){
     return "illegal";
 }
 
-std::shared_ptr<INSTRUCTION::Instruction> Illegal::create(uint16_t opcode){
-    return std::make_shared<Illegal>(opcode);
+std::unique_ptr<INSTRUCTION::Instruction> Illegal::create(uint16_t opcode){
+    return std::make_unique<Illegal>(opcode);
 }

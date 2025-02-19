@@ -55,7 +55,7 @@ BitShift::BitShift(uint16_t opcode) : Instruction(opcode){
         }
     }else{
         if(this->is_imm){
-            this->imm_shift = rotation_part + 1;
+            this->imm_shift = (uint8_t)(rotation_part + 1u);
         }else{
             this->shift_reg = getRegisterType(0, rotation_part);
         }
@@ -211,6 +211,6 @@ std::string BitShift::disassembly(CPUState& cpu_state){
     return output.str();
 }
 
-std::shared_ptr<INSTRUCTION::Instruction> BitShift::create(uint16_t opcode){
-    return std::make_shared<BitShift>(opcode);
+std::unique_ptr<INSTRUCTION::Instruction> BitShift::create(uint16_t opcode){
+    return std::make_unique<BitShift>(opcode);
 }

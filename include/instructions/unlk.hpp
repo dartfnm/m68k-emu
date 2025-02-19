@@ -12,7 +12,7 @@ namespace M68K{
             void execute(CPUState& cpu_state) override;
             std::string disassembly(CPUState& cpu_state) override;
 
-            static std::shared_ptr<INSTRUCTION::Instruction> create(uint16_t opcode);
+            static std::unique_ptr<INSTRUCTION::Instruction> create(uint16_t opcode);
         };
     }
 }

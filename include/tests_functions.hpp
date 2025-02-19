@@ -4,7 +4,7 @@
 #include <functional>
 #include <stdexcept>
 
-#define _TEST_ERROR_STRING (std::string(__FILE__) + std::string(":") + std::to_string(__LINE__) + std::string(" in ") + std::string(__PRETTY_FUNCTION__))
+#define _TEST_ERROR_STRING (std::string(__FILE__) + std::string(":") + std::to_string(__LINE__) + std::string(" in ") + std::string(__FUNCTION__))
 
 #define TEST_TRUE(result) _TEST_TRUE((result), _TEST_ERROR_STRING)
 #define TEST_FALSE(result) _TEST_TRUE(!(result), _TEST_ERROR_STRING)
@@ -37,7 +37,7 @@ void _TEST_THROW(std::function<void()> function, std::string error){
     error = error + " no throw. " + typeid(E).name() + " expected.";
     try{
         function();
-    }catch (const E& e){
+    }catch (const E& /*e*/){
         is_catch = true;
     }
     _TEST_TRUE(is_catch, error);

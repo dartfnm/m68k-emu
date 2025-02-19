@@ -22,7 +22,7 @@ void CPUState::stackPush(DataSize size, uint32_t data){
     this->memory.set(stack_ptr, size, data);
 }
 
-uint32_t CPUState::getControlAddress(AddressingMode mode, RegisterType reg, DataSize size){
+uint32_t CPUState::getControlAddress(AddressingMode mode, RegisterType reg, DataSize /*size*/){
     uint32_t addr = 0;
     switch(mode){
         case ADDR_MODE_INDIRECT: {
@@ -32,7 +32,7 @@ uint32_t CPUState::getControlAddress(AddressingMode mode, RegisterType reg, Data
         case ADDR_MODE_INDIRECT_DISPLACEMENT: {
             addr = this->registers.get(reg, SIZE_LONG);
             uint32_t pc = this->registers.get(REG_PC, SIZE_LONG);
-            int16_t offset = this->memory.get(pc, SIZE_WORD);
+            int16_t offset = (int16_t)this->memory.get(pc, SIZE_WORD);
             this->registers.set(REG_PC, SIZE_LONG, pc + SIZE_WORD);
             addr += offset;
             break;
@@ -40,7 +40,7 @@ uint32_t CPUState::getControlAddress(AddressingMode mode, RegisterType reg, Data
         case ADDR_MODE_INDIRECT_INDEX: {
             addr = this->registers.get(reg, SIZE_LONG);
             uint32_t pc = this->registers.get(REG_PC, SIZE_LONG);
-            uint16_t ext_word = this->memory.get(pc, SIZE_WORD);
+            uint16_t ext_word = (uint16_t)this->memory.get(pc, SIZE_WORD);
             RegisterType ext_reg = Instruction::getRegisterType((ext_word & 0x8000), (ext_word >> 12) & 0x7);
             DataSize ext_reg_size = ((ext_word >> 11) & 0x1) ? SIZE_LONG : SIZE_WORD;
             int8_t ext_offset = ext_word & 0xFF;
@@ -56,14 +56,14 @@ uint32_t CPUState::getControlAddress(AddressingMode mode, RegisterType reg, Data
         }
         case ADDR_MODE_PC_DISPLACEMENT: {
             uint32_t pc = this->registers.get(REG_PC, SIZE_LONG);
-            int16_t offset = this->memory.get(pc, SIZE_WORD);
+            int16_t offset = (int16_t)this->memory.get(pc, SIZE_WORD);
             this->registers.set(REG_PC, SIZE_LONG, pc + SIZE_WORD);
             addr = pc + offset;
             break;
         }
         case ADDR_MODE_PC_INDEX: {
             uint32_t pc = this->registers.get(REG_PC, SIZE_LONG);
-            uint16_t ext_word = this->memory.get(pc, SIZE_WORD);
+            uint16_t ext_word = (uint16_t)this->memory.get(pc, SIZE_WORD);
             RegisterType ext_reg = Instruction::getRegisterType((ext_word & 0x8000), (ext_word >> 12) & 0x7);
             DataSize ext_reg_size = ((ext_word >> 11) & 0x1) ? SIZE_LONG : SIZE_WORD;
             int8_t ext_offset = ext_word & 0xFF;
@@ -131,7 +131,7 @@ uint32_t CPUState::getData(AddressingMode mode, RegisterType reg, DataSize size)
         case ADDR_MODE_INDIRECT_DISPLACEMENT: {
             uint32_t addr = this->registers.get(reg, SIZE_LONG);
             uint32_t pc = this->registers.get(REG_PC, SIZE_LONG);
-            int16_t offset = this->memory.get(pc, SIZE_WORD);
+            int16_t offset = (int16_t)this->memory.get(pc, SIZE_WORD);
             this->registers.set(REG_PC, SIZE_LONG, pc + SIZE_WORD);
             data = this->memory.get(addr + offset, size);
             break;
@@ -139,7 +139,7 @@ uint32_t CPUState::getData(AddressingMode mode, RegisterType reg, DataSize size)
         case ADDR_MODE_INDIRECT_INDEX: {
             uint32_t addr = this->registers.get(reg, SIZE_LONG);
             uint32_t pc = this->registers.get(REG_PC, SIZE_LONG);
-            uint16_t ext_word = this->memory.get(pc, SIZE_WORD);
+            uint16_t ext_word = (uint16_t)this->memory.get(pc, SIZE_WORD);
             RegisterType ext_reg = Instruction::getRegisterType((ext_word & 0x8000), (ext_word >> 12) & 0x7);
             DataSize ext_reg_size = ((ext_word >> 11) & 0x1) ? SIZE_LONG : SIZE_WORD;
             int8_t ext_offset = ext_word & 0xFF;
@@ -155,14 +155,14 @@ uint32_t CPUState::getData(AddressingMode mode, RegisterType reg, DataSize size)
         }
         case ADDR_MODE_PC_DISPLACEMENT: {
             uint32_t pc = this->registers.get(REG_PC, SIZE_LONG);
-            int16_t offset = this->memory.get(pc, SIZE_WORD);
+            int16_t offset = (int16_t)this->memory.get(pc, SIZE_WORD);
             this->registers.set(REG_PC, SIZE_LONG, pc + SIZE_WORD);
             data = this->memory.get(pc + offset, size);
             break;
         }
         case ADDR_MODE_PC_INDEX: {
             uint32_t pc = this->registers.get(REG_PC, SIZE_LONG);
-            uint16_t ext_word = this->memory.get(pc, SIZE_WORD);
+            uint16_t ext_word = (uint16_t)this->memory.get(pc, SIZE_WORD);
             RegisterType ext_reg = Instruction::getRegisterType((ext_word & 0x8000), (ext_word >> 12) & 0x7);
             DataSize ext_reg_size = ((ext_word >> 11) & 0x1) ? SIZE_LONG : SIZE_WORD;
             int8_t ext_offset = ext_word & 0xFF;
@@ -232,14 +232,14 @@ uint32_t CPUState::getDataSilent(AddressingMode mode, RegisterType reg, DataSize
         case ADDR_MODE_INDIRECT_DISPLACEMENT: {
             uint32_t addr = this->registers.get(reg, SIZE_LONG);
             uint32_t pc = this->registers.get(REG_PC, SIZE_LONG);
-            int16_t offset = this->memory.get(pc, SIZE_WORD);
+            int16_t offset = (int16_t)this->memory.get(pc, SIZE_WORD);
             data = this->memory.get(addr + offset, size);
             break;
         }
         case ADDR_MODE_INDIRECT_INDEX: {
             uint32_t addr = this->registers.get(reg, SIZE_LONG);
             uint32_t pc = this->registers.get(REG_PC, SIZE_LONG);
-            uint16_t ext_word = this->memory.get(pc, SIZE_WORD);
+            uint16_t ext_word = (uint16_t)this->memory.get(pc, SIZE_WORD);
             RegisterType ext_reg = Instruction::getRegisterType((ext_word & 0x8000), (ext_word >> 12) & 0x7);
             DataSize ext_reg_size = ((ext_word >> 11) & 0x1) ? SIZE_LONG : SIZE_WORD;
             int8_t ext_offset = ext_word & 0xFF;
@@ -254,13 +254,13 @@ uint32_t CPUState::getDataSilent(AddressingMode mode, RegisterType reg, DataSize
         }
         case ADDR_MODE_PC_DISPLACEMENT: {
             uint32_t pc = this->registers.get(REG_PC, SIZE_LONG);
-            int16_t offset = this->memory.get(pc, SIZE_WORD);
+            int16_t offset = (int16_t)this->memory.get(pc, SIZE_WORD);
             data = this->memory.get(pc + offset, size);
             break;
         }
         case ADDR_MODE_PC_INDEX: { // TODO
             uint32_t pc = this->registers.get(REG_PC, SIZE_LONG);
-            uint16_t ext_word = this->memory.get(pc, SIZE_WORD);
+            uint16_t ext_word = (uint16_t)this->memory.get(pc, SIZE_WORD);
             RegisterType ext_reg = Instruction::getRegisterType((ext_word & 0x8000), (ext_word >> 12) & 0x7);
             DataSize ext_reg_size = ((ext_word >> 11) & 0x1) ? SIZE_LONG : SIZE_WORD;
             int8_t ext_offset = ext_word & 0xFF;
@@ -329,7 +329,7 @@ void CPUState::setData(AddressingMode mode, RegisterType reg, DataSize size, uin
         case ADDR_MODE_INDIRECT_DISPLACEMENT: {
             uint32_t addr = this->registers.get(reg, SIZE_LONG);
             uint32_t pc = this->registers.get(REG_PC, SIZE_LONG);
-            int16_t offset = this->memory.get(pc, SIZE_WORD);
+            int16_t offset = (int16_t)this->memory.get(pc, SIZE_WORD);
             this->registers.set(REG_PC, SIZE_LONG, pc + SIZE_WORD);
             this->memory.set(addr + offset, size, data);
             break;
@@ -337,7 +337,7 @@ void CPUState::setData(AddressingMode mode, RegisterType reg, DataSize size, uin
         case ADDR_MODE_INDIRECT_INDEX: {
             uint32_t addr = this->registers.get(reg, SIZE_LONG);
             uint32_t pc = this->registers.get(REG_PC, SIZE_LONG);
-            uint16_t ext_word = this->memory.get(pc, SIZE_WORD);
+            uint16_t ext_word = (uint16_t)this->memory.get(pc, SIZE_WORD);
             RegisterType ext_reg = Instruction::getRegisterType((ext_word & 0x8000), (ext_word >> 12) & 0x7);
             DataSize ext_reg_size = ((ext_word >> 11) & 0x1) ? SIZE_LONG : SIZE_WORD;
             int8_t ext_offset = ext_word & 0xFF;

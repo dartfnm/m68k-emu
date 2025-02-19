@@ -35,6 +35,6 @@ std::string Unlk::disassembly(CPUState& cpu_state){
     return output.str();
 }
 
-std::shared_ptr<INSTRUCTION::Instruction> Unlk::create(uint16_t opcode){
-    return std::make_shared<Unlk>(opcode);
+std::unique_ptr<INSTRUCTION::Instruction> Unlk::create(uint16_t opcode){
+    return std::make_unique<Unlk>(opcode);
 }

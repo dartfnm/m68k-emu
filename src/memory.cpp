@@ -1,6 +1,7 @@
 #include "memory.hpp"
 #include "helpers.hpp"
 #include <stdexcept>
+
 using namespace M68K;
 
 uint32_t Memory::get(std::size_t address, DataSize size){
@@ -64,21 +65,21 @@ void Memory::set(std::size_t address, DataSize size, uint32_t data){
 
     switch(size){
         case DataSize::SIZE_BYTE:{
-            this->memory[address] = MASK_8(data);
+            this->memory[address] = (uint8_t)MASK_8(data);
             break;
         }
 
         case DataSize::SIZE_WORD:{  //BIG ENDIAN
-            this->memory[address] = MASK_8(data >> 8);
-            this->memory[address + 1] = MASK_8(data);
+            this->memory[address] = (uint8_t)MASK_8(data >> 8);
+            this->memory[address + 1] = (uint8_t)MASK_8(data);
             break;
         }
 
         case DataSize::SIZE_LONG:{  //BIG ENDIAN
-            this->memory[address] = MASK_8(data >> 24);
-            this->memory[address + 1] = MASK_8(data >> 16);
-            this->memory[address + 2] = MASK_8(data >> 8);
-            this->memory[address + 3] = MASK_8(data);
+            this->memory[address] = (uint8_t)MASK_8(data >> 24);
+            this->memory[address + 1] = (uint8_t)MASK_8(data >> 16);
+            this->memory[address + 2] = (uint8_t)MASK_8(data >> 8);
+            this->memory[address + 3] = (uint8_t)MASK_8(data);
             break;
         }
         

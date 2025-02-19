@@ -46,7 +46,7 @@ void Eori::execute(CPUState& cpu_state){
     uint32_t dest_data = cpu_state.getDataSilent(this->dest_mode, this->dest_reg, this->data_size);
     uint64_t result = dest_data ^ src_data;
 
-    cpu_state.setData(this->dest_mode, this->dest_reg, this->data_size, result);
+    cpu_state.setData(this->dest_mode, this->dest_reg, this->data_size, (uint32_t)result);
 
     cpu_state.registers.set(SR_FLAG_NEGATIVE, IS_NEGATIVE(result, this->data_size));
     cpu_state.registers.set(SR_FLAG_ZERO, IS_ZERO(result, this->data_size));
@@ -67,6 +67,6 @@ std::string Eori::disassembly(CPUState& cpu_state){
     return output.str();
 }
 
-std::shared_ptr<INSTRUCTION::Instruction> Eori::create(uint16_t opcode){
-    return std::make_shared<Eori>(opcode);
+std::unique_ptr<INSTRUCTION::Instruction> Eori::create(uint16_t opcode){
+    return std::make_unique<Eori>(opcode);
 }

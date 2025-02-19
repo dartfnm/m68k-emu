@@ -107,6 +107,6 @@ std::string Bcc::disassembly(CPUState& cpu_state){
     return output.str();
 }
 
-std::shared_ptr<INSTRUCTION::Instruction> Bcc::create(uint16_t opcode){
-    return std::make_shared<Bcc>(opcode);
+std::unique_ptr<INSTRUCTION::Instruction> Bcc::create(uint16_t opcode){
+    return std::make_unique<Bcc>(opcode);
 }

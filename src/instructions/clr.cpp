@@ -62,6 +62,6 @@ std::string Clr::disassembly(CPUState& cpu_state){
     return output.str();
 }
 
-std::shared_ptr<INSTRUCTION::Instruction> Clr::create(uint16_t opcode){
-    return std::make_shared<Clr>(opcode);
+std::unique_ptr<INSTRUCTION::Instruction> Clr::create(uint16_t opcode){
+    return std::make_unique<Clr>(opcode);
 }

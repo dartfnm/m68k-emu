@@ -17,8 +17,8 @@ int main(int, char**){
 
         uint32_t data_ptr = 0x3000;
         uint32_t last_data = 0;
-        for(size_t i = 0; i < 30; i++){
-            uint32_t data_addr = data_ptr + (i * SIZE_LONG);
+        for(uint32_t i = 0; i < 30u; i++){
+            uint32_t data_addr = data_ptr + (uint32_t)(i * SIZE_LONG);
             uint32_t data = cpu.state.memory.get(data_addr, SIZE_LONG);
             TEST_TRUE(last_data <= data);
             last_data = data;

@@ -17,6 +17,7 @@ namespace M68K{
             bool is_valid = true;
 
             Instruction(uint16_t opcode) : opcode(opcode) {};
+            virtual ~Instruction() = default;
             virtual void execute(CPUState&) {};
             virtual std::string disassembly(CPUState&) { return "unknown"; };
 

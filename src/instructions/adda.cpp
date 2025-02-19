@@ -42,7 +42,7 @@ void Adda::execute(CPUState& cpu_state){
     uint32_t dest_data = cpu_state.getDataSilent(this->dest_mode, this->dest_reg, this->data_size);
     uint64_t result = src_data + dest_data;
 
-    cpu_state.setData(this->dest_mode, this->dest_reg, this->data_size, result);
+    cpu_state.setData(this->dest_mode, this->dest_reg, this->data_size, (uint32_t)result);
 }
 
 std::string Adda::disassembly(CPUState& cpu_state){
@@ -58,6 +58,6 @@ std::string Adda::disassembly(CPUState& cpu_state){
     return output.str();
 }
 
-std::shared_ptr<INSTRUCTION::Instruction> Adda::create(uint16_t opcode){
-    return std::make_shared<Adda>(opcode);
+std::unique_ptr<INSTRUCTION::Instruction> Adda::create(uint16_t opcode){
+    return std::make_unique<Adda>(opcode);
 }

@@ -26,8 +26,8 @@ void Div::execute(CPUState& cpu_state){
     pc += SIZE_WORD;
     cpu_state.registers.set(REG_PC, SIZE_LONG, pc);
 
-    uint16_t src_data = cpu_state.getData(this->src_mode, this->src_reg, this->data_size);
-    uint16_t dest_data = cpu_state.getDataSilent(this->dest_mode, this->dest_reg, this->data_size);
+    uint16_t src_data = (uint16_t)cpu_state.getData(this->src_mode, this->src_reg, this->data_size);
+    uint16_t dest_data = (uint16_t)cpu_state.getDataSilent(this->dest_mode, this->dest_reg, this->data_size);
     uint32_t result;
 
     if(this->is_signed){
@@ -60,6 +60,6 @@ std::string Div::disassembly(CPUState& cpu_state){
 }
 
 
-std::shared_ptr<INSTRUCTION::Instruction> Div::create(uint16_t opcode){
-    return std::make_shared<Div>(opcode);
+std::unique_ptr<INSTRUCTION::Instruction> Div::create(uint16_t opcode){
+    return std::make_unique<Div>(opcode);
 }

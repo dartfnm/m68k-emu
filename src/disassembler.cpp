@@ -82,7 +82,7 @@ std::string DISASSEMBLER::effectiveAddress(AddressingMode mode, RegisterType reg
         }
         case ADDR_MODE_INDIRECT_DISPLACEMENT: {
             uint32_t pc = cpu_state.registers.get(REG_PC, SIZE_LONG);
-            int16_t offset = cpu_state.memory.get(pc, SIZE_WORD);
+            int16_t offset = (int16_t)cpu_state.memory.get(pc, SIZE_WORD);
             cpu_state.registers.set(REG_PC, SIZE_LONG, pc + SIZE_WORD);
             
             output_stream << "($" << std::hex << offset << "," << DISASSEMBLER::reg(reg) << ")";
@@ -90,7 +90,7 @@ std::string DISASSEMBLER::effectiveAddress(AddressingMode mode, RegisterType reg
         }
         case ADDR_MODE_INDIRECT_INDEX: {
             uint32_t pc = cpu_state.registers.get(REG_PC, SIZE_LONG);
-            uint16_t ext_word = cpu_state.memory.get(pc, SIZE_WORD);
+            uint16_t ext_word = (uint16_t)cpu_state.memory.get(pc, SIZE_WORD);
             RegisterType ext_reg = INSTRUCTION::Instruction::getRegisterType((ext_word & 0x8000), (ext_word >> 12) & 0x7);
             int8_t ext_offset = ext_word & 0xFF;
 
@@ -100,7 +100,7 @@ std::string DISASSEMBLER::effectiveAddress(AddressingMode mode, RegisterType reg
         }
         case ADDR_MODE_PC_DISPLACEMENT: {
             uint32_t pc = cpu_state.registers.get(REG_PC, SIZE_LONG);
-            int16_t offset = cpu_state.memory.get(pc, SIZE_WORD);
+            int16_t offset = (int16_t)cpu_state.memory.get(pc, SIZE_WORD);
 
             cpu_state.registers.set(REG_PC, SIZE_LONG, pc + SIZE_WORD);
             output_stream << "($" << std::hex << (offset+2) << "," << DISASSEMBLER::reg(REG_PC) << ")";
@@ -108,7 +108,7 @@ std::string DISASSEMBLER::effectiveAddress(AddressingMode mode, RegisterType reg
         }
         case ADDR_MODE_PC_INDEX: {
             uint32_t pc = cpu_state.registers.get(REG_PC, SIZE_LONG);
-            uint16_t ext_word = cpu_state.memory.get(pc, SIZE_WORD);
+            uint16_t ext_word = (uint16_t)cpu_state.memory.get(pc, SIZE_WORD);
             RegisterType ext_reg = INSTRUCTION::Instruction::getRegisterType((ext_word & 0x8000), (ext_word >> 12) & 0x7);
             int8_t ext_offset = ext_word & 0xFF;
 

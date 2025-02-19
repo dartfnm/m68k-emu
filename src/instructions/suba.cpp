@@ -42,7 +42,7 @@ void Suba::execute(CPUState& cpu_state){
     uint32_t dest_data = cpu_state.getDataSilent(this->dest_mode, this->dest_reg, this->data_size);
     uint64_t result = dest_data - src_data;
 
-    cpu_state.setData(this->dest_mode, this->dest_reg, this->data_size, result);
+    cpu_state.setData(this->dest_mode, this->dest_reg, this->data_size, (uint32_t)result);
 }
 
 std::string Suba::disassembly(CPUState& cpu_state){
@@ -58,6 +58,6 @@ std::string Suba::disassembly(CPUState& cpu_state){
     return output.str();
 }
 
-std::shared_ptr<INSTRUCTION::Instruction> Suba::create(uint16_t opcode){
-    return std::make_shared<Suba>(opcode);
+std::unique_ptr<INSTRUCTION::Instruction> Suba::create(uint16_t opcode){
+    return std::make_unique<Suba>(opcode);
 }

@@ -10,7 +10,7 @@ using namespace M68K;
 struct MaskTableElement{
     uint32_t mask;
     uint32_t value;
-    std::function<std::shared_ptr<INSTRUCTION::Instruction>(uint16_t)> create_function;
+    std::function<std::unique_ptr<INSTRUCTION::Instruction>(uint16_t)> create_function;
 };
 
 std::vector<MaskTableElement> opcode_mask_table = {
@@ -109,18 +109,22 @@ void InstructionDecoder::generateOpcodeTable(){
     this->opcode_table.clear();
     this->opcode_table.reserve(0x10000);
 
-    for(uint32_t opcode = 0; opcode < 0x10000; opcode++){
-        std::shared_ptr<M68K::INSTRUCTION::Instruction> instruction = INSTRUCTION::Illegal::create(opcode);
-        for(auto& opcode_mask : opcode_mask_table){
-            if((opcode & opcode_mask.mask) == opcode_mask.value){
-                auto instruction_candidate = opcode_mask.create_function(opcode);
-                if(instruction_candidate.get()->is_valid){
-                    instruction = instruction_candidate;
-                }
-                break;
+    std::unique_ptr<M68K::INSTRUCTION::Instruction> instruction;
+    std::unique_ptr<M68K::INSTRUCTION::Instruction> instruction_candidate;
+
+    for (uint32_t opcode = 0; opcode <= 0xffff; opcode++) {
+        for (const MaskTableElement& opcode_mask : opcode_mask_table) {
+            if ((opcode & opcode_mask.mask) != opcode_mask.value)
+                continue;
+            instruction_candidate = opcode_mask.create_function((uint16_t)opcode);
+            if (instruction_candidate.get()->is_valid) {
+                instruction = std::move(instruction_candidate);
             }
+            break;
         }
-        this->opcode_table.emplace_back(instruction);
+        if (!instruction)
+            instruction = INSTRUCTION::Illegal::create(opcode);
+        this->opcode_table.push_back(std::move(instruction));
     }
 }
 

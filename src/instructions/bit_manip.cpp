@@ -58,22 +58,22 @@ void BitManip::execute(CPUState& cpu_state){
         }
         case InstructionType::BCHG: {
             if(test_bit_value){
-                result &= ~static_cast<uint32_t>(1 << shift);
+                result &= ~(1ull << shift);
             }else{
-                result |= (1 << shift);
+                result |= (1ull << shift);
             }
             break;
         }
         case InstructionType::BCLR: {
-            result &= ~static_cast<uint32_t>(1 << shift);
+            result &= ~(1ull << shift);
             break;
         }
         case InstructionType::BSET: {
-            result |= (1 << shift);
+            result |= (1ull << shift);
             break;
         }
     }
-    cpu_state.setData(this->dest_mode, this->dest_reg, this->data_size, result);
+    cpu_state.setData(this->dest_mode, this->dest_reg, this->data_size, (uint32_t)result);
     cpu_state.registers.set(SR_FLAG_ZERO, !test_bit_value);
 }
 
@@ -90,6 +90,6 @@ std::string BitManip::disassembly(CPUState& cpu_state){
     return output.str();
 }
 
-std::shared_ptr<INSTRUCTION::Instruction> BitManip::create(uint16_t opcode){
-    return std::make_shared<BitManip>(opcode);
+std::unique_ptr<INSTRUCTION::Instruction> BitManip::create(uint16_t opcode){
+    return std::make_unique<BitManip>(opcode);
 }

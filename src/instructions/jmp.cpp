@@ -37,6 +37,6 @@ std::string Jmp::disassembly(CPUState& cpu_state){
     return output.str();
 }
 
-std::shared_ptr<INSTRUCTION::Instruction> Jmp::create(uint16_t opcode){
-    return std::make_shared<Jmp>(opcode);
+std::unique_ptr<INSTRUCTION::Instruction> Jmp::create(uint16_t opcode){
+    return std::make_unique<Jmp>(opcode);
 }

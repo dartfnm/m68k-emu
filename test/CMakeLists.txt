@@ -1,12 +1,20 @@
 cmake_minimum_required(VERSION 3.14)
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 14)
 
 function(m68k_create_test TEST_NAME)
     add_executable(test_${TEST_NAME} test_${TEST_NAME}.cpp)
+
+	target_link_libraries(test_${TEST_NAME} PRIVATE m68k-emu)
+if(MSVC)
+	target_compile_options(test_${TEST_NAME} PRIVATE /W4 /permissive- /MP)
+else()
     target_compile_options(test_${TEST_NAME} PRIVATE -Wall -Wextra -Wpedantic -ggdb)
-    target_link_libraries(test_${TEST_NAME} PRIVATE m68k-emu -static-libgcc -static-libstdc++)
+    target_link_libraries(test_${TEST_NAME} PRIVATE -static-libgcc -static-libstdc++)
+endif()
     add_test(${TEST_NAME} test_${TEST_NAME})
 endfunction()
+
+
 
 include(CTest)
 m68k_create_test(memory)

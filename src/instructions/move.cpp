@@ -95,6 +95,6 @@ std::string Move::disassembly(CPUState& cpu_state){
     return output.str();
 }
 
-std::shared_ptr<INSTRUCTION::Instruction> Move::create(uint16_t opcode){
-    return std::make_shared<Move>(opcode);
+std::unique_ptr<INSTRUCTION::Instruction> Move::create(uint16_t opcode){
+    return std::make_unique<Move>(opcode);
 }

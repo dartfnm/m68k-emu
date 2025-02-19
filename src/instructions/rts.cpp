@@ -25,6 +25,6 @@ std::string Rts::disassembly(CPUState& cpu_state){
     return "rts";
 }
 
-std::shared_ptr<INSTRUCTION::Instruction> Rts::create(uint16_t opcode){
-    return std::make_shared<Rts>(opcode);
+std::unique_ptr<INSTRUCTION::Instruction> Rts::create(uint16_t opcode){
+    return std::make_unique<Rts>(opcode);
 }

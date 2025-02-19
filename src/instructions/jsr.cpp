@@ -40,6 +40,6 @@ std::string Jsr::disassembly(CPUState& cpu_state){
     return output.str();
 }
 
-std::shared_ptr<INSTRUCTION::Instruction> Jsr::create(uint16_t opcode){
-    return std::make_shared<Jsr>(opcode);
+std::unique_ptr<INSTRUCTION::Instruction> Jsr::create(uint16_t opcode){
+    return std::make_unique<Jsr>(opcode);
 }

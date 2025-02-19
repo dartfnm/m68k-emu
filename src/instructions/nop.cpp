@@ -23,6 +23,6 @@ std::string Nop::disassembly(CPUState& cpu_state){
 }
 
 
-std::shared_ptr<INSTRUCTION::Instruction> Nop::create(uint16_t opcode){
-    return std::make_shared<Nop>(opcode);
+std::unique_ptr<INSTRUCTION::Instruction> Nop::create(uint16_t opcode){
+    return std::make_unique<Nop>(opcode);
 }

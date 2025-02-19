@@ -48,7 +48,7 @@ void Addx::execute(CPUState& cpu_state){
     uint32_t dest_data = cpu_state.getDataSilent(this->dest_mode, this->dest_reg, this->data_size);
     uint64_t result = src_data + dest_data + extend_data;
 
-    cpu_state.setData(this->dest_mode, this->dest_reg, this->data_size, result);
+    cpu_state.setData(this->dest_mode, this->dest_reg, this->data_size, (uint32_t)result);
 
     if(!IS_ZERO(result, this->data_size)){ // change only if non zero
         cpu_state.registers.set(SR_FLAG_ZERO, false); 
@@ -74,6 +74,6 @@ std::string Addx::disassembly(CPUState& cpu_state){
 }
 
 
-std::shared_ptr<INSTRUCTION::Instruction> Addx::create(uint16_t opcode){
-    return std::make_shared<Addx>(opcode);
+std::unique_ptr<INSTRUCTION::Instruction> Addx::create(uint16_t opcode){
+    return std::make_unique<Addx>(opcode);
 }

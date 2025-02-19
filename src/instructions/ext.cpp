@@ -22,10 +22,10 @@ void Ext::execute(CPUState& cpu_state){
 
     uint32_t result = 0;
     if(this->data_size == SIZE_WORD){
-        uint8_t data_byte = cpu_state.getData(this->addr_mode, this->addr_reg, SIZE_BYTE);
+        uint8_t data_byte = (uint8_t)cpu_state.getData(this->addr_mode, this->addr_reg, SIZE_BYTE);
         result = static_cast<uint16_t>(static_cast<int16_t>(static_cast<int8_t>(data_byte)));
     }else{
-        uint16_t data_word = cpu_state.getData(this->addr_mode, this->addr_reg, SIZE_WORD);
+        uint16_t data_word = (uint16_t)cpu_state.getData(this->addr_mode, this->addr_reg, SIZE_WORD);
         result = static_cast<uint32_t>(static_cast<int32_t>(static_cast<int8_t>(data_word)));
     }
     cpu_state.setData(this->addr_mode, this->addr_reg, this->data_size, result);
@@ -46,6 +46,6 @@ std::string Ext::disassembly(CPUState& cpu_state){
     return output.str();
 }
 
-std::shared_ptr<INSTRUCTION::Instruction> Ext::create(uint16_t opcode){
-    return std::make_shared<Ext>(opcode);
+std::unique_ptr<INSTRUCTION::Instruction> Ext::create(uint16_t opcode){
+    return std::make_unique<Ext>(opcode);
 }

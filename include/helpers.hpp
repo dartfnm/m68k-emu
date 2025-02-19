@@ -1,5 +1,6 @@
 #pragma once
 #include "defines.hpp"
+#include <string> // std::to_string
 
 namespace M68K{
     template<typename T> inline T MSB_8(T value) { return value & 0x80;}

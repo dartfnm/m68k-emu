@@ -38,6 +38,6 @@ std::string Pea::disassembly(CPUState& cpu_state){
     return output.str();
 }
 
-std::shared_ptr<INSTRUCTION::Instruction> Pea::create(uint16_t opcode){
-    return std::make_shared<Pea>(opcode);
+std::unique_ptr<INSTRUCTION::Instruction> Pea::create(uint16_t opcode){
+    return std::make_unique<Pea>(opcode);
 }

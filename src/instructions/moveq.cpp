@@ -40,6 +40,6 @@ std::string Moveq::disassembly(CPUState& cpu_state){
     return output.str();
 }
 
-std::shared_ptr<INSTRUCTION::Instruction> Moveq::create(uint16_t opcode){
-    return std::make_shared<Moveq>(opcode);
+std::unique_ptr<INSTRUCTION::Instruction> Moveq::create(uint16_t opcode){
+    return std::make_unique<Moveq>(opcode);
 }

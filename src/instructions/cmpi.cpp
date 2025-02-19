@@ -65,6 +65,6 @@ std::string Cmpi::disassembly(CPUState& cpu_state){
     return output.str();
 }
 
-std::shared_ptr<INSTRUCTION::Instruction> Cmpi::create(uint16_t opcode){
-    return std::make_shared<Cmpi>(opcode);
+std::unique_ptr<INSTRUCTION::Instruction> Cmpi::create(uint16_t opcode){
+    return std::make_unique<Cmpi>(opcode);
 }
