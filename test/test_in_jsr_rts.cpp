@@ -3,6 +3,8 @@
 #include "m68k.hpp"
 #include "memory.hpp"
 #include "helpers.hpp"
+#include <instructions/jsr.hpp>
+#include <instructions/rts.hpp>
 
 using namespace M68K;
 

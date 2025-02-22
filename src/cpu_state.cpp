@@ -118,12 +118,17 @@ uint32_t CPUState::getData(AddressingMode mode, RegisterType reg, DataSize size)
             uint32_t addr = this->registers.get(reg, SIZE_LONG);
             data = this->memory.get(addr, size);
             addr += size;
+            // stack pointer should be aligned to a word boundary
+            if (reg == REG_A7 && (size & 1) != 0)
+                ++ addr;
             this->registers.set(reg, SIZE_LONG, addr);
             break;
         }
         case ADDR_MODE_INDIRECT_PREDECREMENT: {
             uint32_t addr = this->registers.get(reg, SIZE_LONG);
             addr -= size;
+            if (reg == REG_A7 && (size & 1) != 0)
+                -- addr;
             data = this->memory.get(addr, size);
             this->registers.set(reg, SIZE_LONG, addr);
             break;
@@ -226,6 +231,8 @@ uint32_t CPUState::getDataSilent(AddressingMode mode, RegisterType reg, DataSize
         case ADDR_MODE_INDIRECT_PREDECREMENT: {
             uint32_t addr = this->registers.get(reg, SIZE_LONG);
             addr -= size;
+            if (reg == REG_A7 && (size & 1) != 0)
+                --addr;
             data = this->memory.get(addr, size);
             break;
         }
@@ -236,19 +243,18 @@ uint32_t CPUState::getDataSilent(AddressingMode mode, RegisterType reg, DataSize
             data = this->memory.get(addr + offset, size);
             break;
         }
-        case ADDR_MODE_INDIRECT_INDEX: {
+        case ADDR_MODE_INDIRECT_INDEX: { // (d8, A4, Xn)
             uint32_t addr = this->registers.get(reg, SIZE_LONG);
             uint32_t pc = this->registers.get(REG_PC, SIZE_LONG);
             uint16_t ext_word = (uint16_t)this->memory.get(pc, SIZE_WORD);
-            RegisterType ext_reg = Instruction::getRegisterType((ext_word & 0x8000), (ext_word >> 12) & 0x7);
-            DataSize ext_reg_size = ((ext_word >> 11) & 0x1) ? SIZE_LONG : SIZE_WORD;
+            RegisterType indexed_reg = Instruction::getRegisterType((ext_word & 0x8000), (ext_word >> 12) & 0x7);
+            DataSize ind_reg_size = ((ext_word >> 11) & 0x1) ? SIZE_LONG : SIZE_WORD;
             int8_t ext_offset = ext_word & 0xFF;
-            int32_t ext_reg_offset = this->registers.get(ext_reg, ext_reg_size);
+            int32_t ext_reg_offset = this->registers.get(indexed_reg, ind_reg_size);
 
-            if(ext_reg_size == SIZE_WORD){
+            if(ind_reg_size == SIZE_WORD){
                 ext_reg_offset = static_cast<int16_t>(ext_reg_offset);
             }
-
             data = this->memory.get(addr + ext_reg_offset + ext_offset, size);
             break;
         }
@@ -269,13 +275,13 @@ uint32_t CPUState::getDataSilent(AddressingMode mode, RegisterType reg, DataSize
             if(ext_reg_size == SIZE_WORD){
                 ext_reg_offset = static_cast<int16_t>(ext_reg_offset);
             }
-
             data = this->memory.get(pc + ext_reg_offset + ext_offset, size);
             break;
         }
         case ADDR_MODE_ABS_WORD: {
             uint32_t pc = this->registers.get(REG_PC, SIZE_LONG);
-            uint32_t addr = this->memory.get(pc, SIZE_WORD);
+            int signedWord = (int16_t)this->memory.get(pc, SIZE_WORD);
+            uint32_t addr = (uint32_t)signedWord;
             data = this->memory.get(addr, size);
             break;
         }
@@ -316,12 +322,18 @@ void CPUState::setData(AddressingMode mode, RegisterType reg, DataSize size, uin
             uint32_t addr = this->registers.get(reg, SIZE_LONG);
             this->memory.set(addr, size, data);
             addr += size;
+            // stack pointer should be aligned to a word boundary
+            if (reg == REG_A7 && (size & 1) != 0)
+                ++addr;
             this->registers.set(reg, SIZE_LONG, addr);
             break;
         }
         case ADDR_MODE_INDIRECT_PREDECREMENT: {
             uint32_t addr = this->registers.get(reg, SIZE_LONG);
             addr -= size;
+            // stack pointer should be aligned to a word boundary
+            if (reg == REG_A7 && (size & 1) != 0)
+                --addr;
             this->memory.set(addr, size, data);
             this->registers.set(reg, SIZE_LONG, addr);
             break;
@@ -376,9 +388,10 @@ void CPUState::setData(AddressingMode mode, RegisterType reg, DataSize size, uin
         // }
         case ADDR_MODE_ABS_WORD: {
             uint32_t pc = this->registers.get(REG_PC, SIZE_LONG);
-            uint32_t addr = this->memory.get(pc, SIZE_WORD);
-            this->registers.set(REG_PC, SIZE_LONG, pc + SIZE_WORD);
+            int signedWord = (int16_t)this->memory.get(pc, SIZE_WORD);
+            uint32_t addr = (uint32_t)signedWord;
             this->memory.set(addr, size, data);
+            this->registers.set(REG_PC, SIZE_LONG, pc + SIZE_WORD);
             break;
         }
         case ADDR_MODE_ABS_LONG: {

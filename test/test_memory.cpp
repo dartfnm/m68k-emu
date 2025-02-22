@@ -9,7 +9,7 @@ using namespace M68K;
 int main(int, char**){
     TEST_NAME("memory");
 
-    Memory memory;
+    SimpleMemory memory;
 
     // Data store
     TEST_LABEL("set long");

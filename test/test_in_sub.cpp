@@ -3,6 +3,7 @@
 #include "m68k.hpp"
 #include "memory.hpp"
 #include "helpers.hpp"
+#include <instructions/sub.hpp>
 
 using namespace M68K;
 

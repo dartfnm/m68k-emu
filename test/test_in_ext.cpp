@@ -3,6 +3,7 @@
 #include "m68k.hpp"
 #include "memory.hpp"
 #include "helpers.hpp"
+#include <instructions/ext.hpp>
 
 using namespace M68K;
 
@@ -14,7 +15,7 @@ int main(int, char**){
         auto instruction = INSTRUCTION::Ext::create(0x4881); // ext.w D1
         CPUState state = CPUState();
         
-        state.registers.set(REG_D1, SIZE_BYTE, static_cast<int8_t>(-10));
+        state.registers.set(REG_D1, SIZE_BYTE, (uint32_t)static_cast<int8_t>(-10));
         instruction.get()->execute(state);
 
         int16_t return_data = state.registers.get(REG_D1, DataSize::SIZE_WORD);
@@ -26,7 +27,7 @@ int main(int, char**){
         auto instruction = INSTRUCTION::Ext::create(0x48c1); // ext.l D1
         CPUState state = CPUState();
         
-        state.registers.set(REG_D1, SIZE_WORD, static_cast<int16_t>(-10));
+        state.registers.set(REG_D1, SIZE_WORD, (uint32_t)static_cast<int16_t>(-10));
         instruction.get()->execute(state);
 
         int32_t return_data = state.registers.get(REG_D1, DataSize::SIZE_LONG);

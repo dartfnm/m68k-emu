@@ -3,19 +3,23 @@
 
 #include <iostream>
 
-using namespace M68K;
+
 using namespace ELFIO;
 
+
+namespace M68K {
 void CPU::step(){
     uint32_t pc = (uint32_t)this->state.registers.get(REG_PC);
     uint16_t opcode = (uint16_t)this->state.memory.get(pc, SIZE_WORD);
 
-    auto instruction = this->instruction_decoder.Decode(opcode);
+    INSTRUCTION::Instruction* instruction;
+    instruction = this->instruction_decoder.Decode(opcode);
     //std::cout << typeid(*instruction).name() << std::endl;
     instruction->execute(this->state);
 }
 
-bool CPU::loadELF(const std::string& file_name){
+
+bool M68K::load_elf(CPU* cpu, const std::string& file_name){
     ELFIO::elfio elf_reader;
     if(!elf_reader.load(file_name)){
         return false;
@@ -29,8 +33,6 @@ bool CPU::loadELF(const std::string& file_name){
     ){
         return false;
     }
-
-    this->state = CPUState();
 
     uint32_t entry_address = (uint32_t)elf_reader.get_entry();
 
@@ -56,12 +58,14 @@ bool CPU::loadELF(const std::string& file_name){
             auto data = segment->get_data();
             for(uint32_t i = 0; i < size; i++){
                 uint32_t address = base_address + i;
-                this->state.memory.set(address, SIZE_BYTE, data[i]); // little slow, but good enough
+                cpu->state.memory.set(address, SIZE_BYTE, data[i]); // little slow, but good enough
             }
         }
     }
 
-    this->state.registers.set(REG_USP, SIZE_LONG, MEMORY_SIZE);
-    this->state.registers.set(REG_PC, SIZE_LONG, entry_address);
+    cpu->state.registers.set(REG_USP, SIZE_LONG, MEMORY_SIZE);
+    cpu->state.registers.set(REG_PC, SIZE_LONG, entry_address);
     return true;
 }
+
+};  // namespace M68K

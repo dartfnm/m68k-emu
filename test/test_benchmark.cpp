@@ -19,7 +19,7 @@ int main(int, char**){
     {
         TEST_LABEL("benchmark");
         CPU cpu = CPU();
-        cpu.loadELF("../../test/binary/benchmark.elf");
+        load_elf(&cpu, "../../test/binary/benchmark.elf");
 
         size_t n = 0;
         timeInterval();

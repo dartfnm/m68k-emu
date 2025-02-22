@@ -9,7 +9,7 @@ int main(int, char**){
     {
         TEST_LABEL("fibonacci");
         CPU cpu = CPU();
-        cpu.loadELF("../../test/binary/fibonacci.elf");
+        load_elf(&cpu, "../../test/binary/fibonacci.elf");
 
         while(cpu.state.registers.get(REG_PC, SIZE_LONG) != 0x10058){
             cpu.step();

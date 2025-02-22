@@ -2,7 +2,18 @@
 #include <cstdint>
 #include <vector>
 
-namespace M68K{
+
+#if defined(_MSC_VER)
+#define M68K_MSVC_PUSH_DISABLE_WARNING(n) __pragma(warning(push)) __pragma(warning(disable : n))
+#define M68K_MSVC_POP_WARNING() __pragma(warning(pop))
+#else /* defined(_MSC_VER) */
+#define M68K_MSVC_PUSH_DISABLE_WARNING(n)
+#define M68K_MSVC_POP_WARNING()
+#endif  // _MSC_VER
+
+
+
+namespace M68K {
     enum DataSize{
         SIZE_BYTE = 1,
         SIZE_WORD = 2,
@@ -45,4 +56,5 @@ namespace M68K{
     };
 
     const std::size_t MEMORY_SIZE = 0x01000000; // 16 MB
-}
+};
+

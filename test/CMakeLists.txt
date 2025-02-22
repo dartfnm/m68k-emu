@@ -47,3 +47,6 @@ m68k_create_test(in_ext)
 m68k_create_test(in_bcc)
 m68k_create_test(in_scc)
 m68k_create_test(in_bit_manip)
+
+
+add_subdirectory(m68k_full_test)
